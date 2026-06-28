@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Cursor 本地配置（含密钥，勿提交）
+.cursor/mcp.json
+
+# 环境变量/密钥
+.env
+.env.local
+*.key
+secrets.*

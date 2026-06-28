@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>昆明 4 日游 · 五一旅行攻略</title>
+<style>
+  :root{
+    --green:#2f9e7d;
+    --green-d:#1f7a5f;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --txt:#222;
+    --sub:#7a847f;
+    --line:#e9eeec;
+    --shadow:0 6px 22px rgba(31,122,95,.10);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.6;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding-bottom:40px}
+
+  /* header */
+  header{
+    background:linear-gradient(135deg,#2f9e7d,#1f7a5f);
+    color:#fff;padding:26px 20px 20px;border-radius:0 0 22px 22px;
+  }
+  header h1{margin:0;font-size:24px;letter-spacing:1px}
+  header .meta{margin-top:6px;font-size:13px;opacity:.92}
+  .weather{
+    margin-top:14px;background:rgba(255,255,255,.16);
+    border-radius:14px;padding:12px 14px;font-size:13px;
+    display:flex;gap:10px;align-items:flex-start;backdrop-filter:blur(4px);
+  }
+  .weather .ic{font-size:22px;line-height:1}
+  .weather b{font-weight:600}
+
+  /* day tabs */
+  .tabs{
+    display:flex;gap:8px;padding:14px 16px 4px;position:sticky;top:0;z-index:30;
+    background:var(--bg);overflow-x:auto;
+  }
+  .tab{
+    flex:0 0 auto;border:none;cursor:pointer;
+    background:#fff;color:var(--sub);font-size:14px;font-weight:600;
+    padding:9px 16px;border-radius:999px;box-shadow:var(--shadow);transition:.2s;
+  }
+  .tab.active{background:var(--green);color:#fff}
+
+  /* map */
+  #map{width:100%;height:320px;border-radius:0;margin:0}
+  .mapbox{margin:12px 16px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#dfeee8}
+  .mapbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;background:#fff;font-size:13px;color:var(--sub);
+  }
+  .mapbar .legend{display:flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block}
+  .btn-app{
+    border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;
+    padding:8px 14px;border-radius:999px;cursor:pointer;text-decoration:none;
+  }
+
+  /* day intro */
+  .day-intro{margin:6px 16px 0;font-size:13px;color:var(--sub)}
+
+  /* cards */
+  .cards{padding:8px 16px}
+  .card{
+    background:var(--card);border-radius:18px;overflow:hidden;
+    box-shadow:var(--shadow);margin-bottom:16px;position:relative;
+  }
+  .card .img{height:170px;background-size:cover;background-position:center;position:relative}
+  .card .order{
+    position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;
+    background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.25)
+  }
+  .card .time{
+    position:absolute;right:12px;top:12px;background:rgba(0,0,0,.55);color:#fff;
+    font-size:12px;padding:4px 10px;border-radius:999px
+  }
+  .card .body{padding:14px 16px 16px}
+  .card h3{margin:0 0 4px;font-size:17px}
+  .card .tagline{color:var(--green-d);font-size:12px;font-weight:600;margin-bottom:6px}
+  .card p{margin:0;font-size:13px;color:var(--sub)}
+  .card .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .chip{
+    font-size:12.5px;font-weight:600;border-radius:999px;padding:8px 14px;cursor:pointer;
+    border:1px solid var(--green);color:var(--green-d);background:#eef7f3;text-decoration:none;
+  }
+  .chip.solid{background:var(--green);color:#fff;border-color:var(--green)}
+
+  /* taxi leg connector */
+  .leg{
+    display:flex;align-items:center;gap:8px;margin:-4px 8px 12px;
+    color:#c47a16;font-size:12.5px;font-weight:600;
+  }
+  .leg .line{flex:1;height:1px;border-top:2px dashed #e3c98c}
+  .leg .taxi{background:#fff7e8;border:1px solid #f0d79a;border-radius:999px;padding:5px 12px;display:flex;gap:6px;align-items:center}
+  .leg a{color:#c47a16;text-decoration:underline}
+
+  footer{text-align:center;color:var(--sub);font-size:12px;padding:10px 20px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>春城昆明 · 4 日深度游</h1>
+    <div class="meta">五一假期 · 经典市区 + 石林 + 西山滇池 + 古镇花市</div>
+    <div class="weather">
+      <span class="ic">⛅️</span>
+      <span>
+        <b>五一天气：</b>昆明 5 月平均 15–25℃，气候温和，紫外线强、午后偶有阵雨。<br>
+        建议：<b>防晒霜 + 帽子/墨镜</b>、备<b>薄外套</b>（早晚凉）、带<b>折叠伞</b>，鞋子选舒适步行款。
+      </span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <div class="mapbox">
+    <div id="map"></div>
+    <div class="mapbar">
+      <span class="legend"><span class="dot"></span> 当日打车路线（绿色连线 = 行车顺序）</span>
+      <a class="btn-app" id="openApp" href="#">高德App看全程</a>
+    </div>
+  </div>
+
+  <div class="day-intro" id="dayIntro"></div>
+  <div class="cards" id="cards"></div>
+
+  <footer>路线为参考行程，景点间默认打车前往 · 点击「打车前往」按钮可直接唤起高德地图 App 导航</footer>
+</div>
+
+<script>
+/* ============ 行程数据（坐标为高德 GCJ-02） ============ */
+const TRIP = [
+  {
+    day:"Day 1", title:"市区经典 · 翠湖老街", color:"#2f9e7d",
+    intro:"抵达昆明，轻松逛市区。慢节奏适应高原，傍晚老街觅食。",
+    spots:[
+      {name:"翠湖公园", time:"09:30", tag:"城市绿肺·免费", lng:102.7060, lat:25.0556,
+       desc:"昆明市中心湖景公园，柳树成荫，可逛云大旁的文化巷，咖啡小店密集。",
+       img:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=70", grad:"#3fa686,#2b7a60"},
+      {name:"云南大学(东陆校区)", time:"11:00", tag:"百年学府", lng:102.7080, lat:25.0606,
+       desc:"民国风老校园，会泽院、银杏道，文艺打卡好去处，紧挨翠湖步行可达。",
+       img:"https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&q=70", grad:"#4f9d7d,#2f6f57"},
+      {name:"金马碧鸡坊", time:"16:00", tag:"地标牌坊", lng:102.7124, lat:25.0382,
+       desc:"昆明老城地标双牌坊，连接南屏街商圈，夜景灯光绚丽。",
+       img:"https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&q=70", grad:"#c98a4b,#9c6328"},
+      {name:"南屏街", time:"18:30", tag:"美食夜市", lng:102.7110, lat:25.0402,
+       desc:"核心商业步行街，过桥米线、汽锅鸡、小锅米线随便挑，解决晚餐。",
+       img:"https://images.unsplash.com/photo-1555126634-323283e090fa?w=800&q=70", grad:"#d77a5a,#a8482c"}
+    ]
+  },
+  {
+    day:"Day 2", title:"石林一日游 · 喀斯特奇观", color:"#2f9e7d",
+    intro:"早出发去石林（距市区约 80km，打车/包车约 1.5h）。世界自然遗产，全天游玩。",
+    spots:[
+      {name:"石林风景区", time:"09:30", tag:"世界自然遗产", lng:103.2732, lat:24.8132,
+       desc:"阿诗玛的故乡，奇峰怪石如剑插地，大小石林、剑峰池必看，建议 4–5 小时。",
+       img:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=70", grad:"#5a8f6f,#356048"},
+      {name:"乃古石林", time:"15:00", tag:"黑色石林·人少", lng:103.2880, lat:24.8480,
+       desc:"石林景区附属园区，黑色石峰更原始苍劲，游客少、出片，登顶可俯瞰石海。",
+       img:"https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=800&q=70", grad:"#4a6b58,#2c4636"}
+    ]
+  },
+  {
+    day:"Day 3", title:"西山龙门 · 滇池民族村", color:"#2f9e7d",
+    intro:"上午西山登高望滇池，下午海埂大坝看海鸥/草海，傍晚云南民族村。",
+    spots:[
+      {name:"西山龙门", time:"09:00", tag:"滇池观景台", lng:102.6380, lat:24.9570,
+       desc:"'昆明睡美人山'，乘索道到龙门石窟，绝佳角度俯瞰整个滇池。",
+       img:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=70", grad:"#3f8f8a,#266662"},
+      {name:"滇池海埂大坝", time:"13:00", tag:"高原明珠", lng:102.6520, lat:24.9600,
+       desc:"滇池北岸长堤，远眺西山睡美人，海天一色，吹风散步绝佳。",
+       img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=70", grad:"#3a86b0,#23607f"},
+      {name:"云南民族村", time:"15:30", tag:"民族风情", lng:102.6610, lat:24.9600,
+       desc:"26 个民族村寨集合体，泼水、歌舞表演，紧邻海埂大坝步行可达。",
+       img:"https://images.unsplash.com/photo-1533577116850-9cc66cad8a9b?w=800&q=70", grad:"#b06a8f,#7d4163"}
+    ]
+  },
+  {
+    day:"Day 4", title:"官渡古镇 · 花市收尾", color:"#2f9e7d",
+    intro:"上午官渡古镇吃早点、看古塔，午后斗南花市买花，下午返程。",
+    spots:[
+      {name:"官渡古镇", time:"09:00", tag:"千年古镇·免费", lng:102.7680, lat:24.9990,
+       desc:"金刚塔、妙湛寺，云南小吃聚集地：饵块、米线、官渡粑粑，悠闲早茶。",
+       img:"https://images.unsplash.com/photo-1545048702-79362596cdc9?w=800&q=70", grad:"#9c7b4d,#6f5630"},
+      {name:"斗南花卉市场", time:"12:30", tag:"亚洲第一花市", lng:102.7690, lat:24.8920,
+       desc:"全国 70% 鲜花来源地，论斤卖花，色彩爆炸，必买当伴手礼。",
+       img:"https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&q=70", grad:"#c8567f,#94335a"}
+    ]
+  }
+];
+
+const KEY = "YOUR_AMAP_JS_KEY"; // 请填入你自己的高德 JS API Key（勿硬编码提交到公开仓库）
+let map, current = 0, overlays = [];
+
+/* ============ 渲染 Tabs ============ */
+const tabsEl = document.getElementById("tabs");
+TRIP.forEach((d,i)=>{
+  const b=document.createElement("button");
+  b.className="tab"+(i===0?" active":"");
+  b.textContent=d.day;
+  b.onclick=()=>selectDay(i);
+  tabsEl.appendChild(b);
+});
+
+/* ============ 高德 URI：唤起 App ============ */
+// 单段打车导航（A → B，驾车）
+function taxiUri(a,b){
+  return `https://uri.amap.com/navigation?from=${a.lng},${a.lat},${encodeURIComponent(a.name)}`
+       + `&to=${b.lng},${b.lat},${encodeURIComponent(b.name)}&mode=car&policy=1&src=kmTravel&coordinate=gaode&callnative=1`;
+}
+// 单点定位
+function markerUri(p){
+  return `https://uri.amap.com/marker?position=${p.lng},${p.lat}&name=${encodeURIComponent(p.name)}&src=kmTravel&coordinate=gaode&callnative=1`;
+}
+// 当天全程（首站 → 末站驾车）
+function dayUri(spots){
+  const a=spots[0], b=spots[spots.length-1];
+  return taxiUri(a,b);
+}
+
+/* ============ 渲染某一天 ============ */
+function selectDay(i){
+  current=i;
+  document.querySelectorAll(".tab").forEach((t,idx)=>t.classList.toggle("active",idx===i));
+  const day=TRIP[i];
+  document.getElementById("dayIntro").innerHTML = `<b style="color:var(--green-d)">${day.title}</b> ｜ ${day.intro}`;
+  document.getElementById("openApp").href = dayUri(day.spots);
+
+  // cards + taxi legs
+  const wrap=document.getElementById("cards");
+  wrap.innerHTML="";
+  day.spots.forEach((s,idx)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <div class="img" style="background-image:linear-gradient(135deg,${s.grad}),url('${s.img}')">
+        <div class="order">${idx+1}</div>
+        <div class="time">🕒 ${s.time}</div>
+      </div>
+      <div class="body">
+        <div class="tagline">${s.tag}</div>
+        <h3>${s.name}</h3>
+        <p>${s.desc}</p>
+        <div class="acts">
+          <a class="chip" href="${markerUri(s)}" target="_blank" rel="noopener">📍 高德看位置</a>
+          <a class="chip solid" href="javascript:void(0)" onclick="focusSpot(${idx})">🗺 地图定位</a>
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+
+    // 打车前往下一站
+    if(idx < day.spots.length-1){
+      const next=day.spots[idx+1];
+      const leg=document.createElement("div");
+      leg.className="leg";
+      leg.innerHTML=`<span class="line"></span>
+        <a class="taxi" href="${taxiUri(s,next)}" target="_blank" rel="noopener">🚕 打车前往「${next.name}」</a>
+        <span class="line"></span>`;
+      wrap.appendChild(leg);
+    }
+  });
+
+  drawMap(day);
+}
+
+/* ============ 地图绘制 ============ */
+function drawMap(day){
+  if(!map) return;
+  overlays.forEach(o=>map.remove(o));
+  overlays=[];
+  const path=[];
+
+  day.spots.forEach((s,idx)=>{
+    const pos=[s.lng,s.lat];
+    path.push(pos);
+    const marker=new AMap.Marker({
+      position:pos, map,
+      content:`<div style="background:${day.color};color:#fff;width:26px;height:26px;border-radius:50% 50% 50% 0;
+        transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+        box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff">
+        <span style="transform:rotate(45deg);font-size:13px;font-weight:700">${idx+1}</span></div>`,
+      offset:new AMap.Pixel(-13,-26)
+    });
+    const info=new AMap.InfoWindow({
+      content:`<b>${idx+1}. ${s.name}</b><br><span style="font-size:12px;color:#888">${s.time} · ${s.tag}</span>`,
+      offset:new AMap.Pixel(0,-30)
+    });
+    marker.on("click",()=>info.open(map,pos));
+    overlays.push(marker);
+  });
+
+  // 自定义绘制当日行车顺序连线
+  const line=new AMap.Polyline({
+    path, map, strokeColor:day.color, strokeWeight:5, strokeOpacity:.9,
+    lineJoin:"round", showDir:true
+  });
+  overlays.push(line);
+
+  // 进阶：尝试真实驾车路线（需 key 支持，失败则保留连线）
+  tryDriving(day.spots);
+
+  map.setFitView(overlays,false,[40,40,40,40]);
+}
+
+function focusSpot(idx){
+  const s=TRIP[current].spots[idx];
+  if(map){ map.setZoomAndCenter(15,[s.lng,s.lat]); }
+  document.querySelector(".mapbox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+// 真实驾车路线（可选增强）
+function tryDriving(spots){
+  if(typeof AMap==="undefined" || !AMap.Driving) return;
+  try{
+    const driving=new AMap.Driving({map:null, policy:AMap.DrivingPolicy?AMap.DrivingPolicy.LEAST_TIME:0});
+    const start=spots[0], end=spots[spots.length-1];
+    const waypoints=spots.slice(1,-1).map(s=>new AMap.LngLat(s.lng,s.lat));
+    driving.search(new AMap.LngLat(start.lng,start.lat), new AMap.LngLat(end.lng,end.lat),
+      {waypoints}, (status,result)=>{
+        if(status==="complete" && result.routes && result.routes.length){
+          const pts=[];
+          result.routes[0].steps.forEach(st=>st.path.forEach(p=>pts.push([p.lng,p.lat])));
+          const rl=new AMap.Polyline({path:pts, map, strokeColor:"#1f7a5f",
+            strokeWeight:6, strokeOpacity:.85, lineJoin:"round", showDir:true});
+          overlays.push(rl);
+          map.setFitView(overlays,false,[40,40,40,40]);
+        }
+      });
+  }catch(e){ /* 静默：保留自定义连线 */ }
+}
+
+/* ============ 加载高德 JS API ============ */
+window._AMapSecurityConfig = { securityJsCode:"" };
+(function loadAMap(){
+  const s=document.createElement("script");
+  s.src=`https://webapi.amap.com/maps?v=2.0&key=${KEY}&plugin=AMap.Driving`;
+  s.onload=()=>{
+    map=new AMap.Map("map",{zoom:11, center:[102.71,24.99], viewMode:"2D",
+      mapStyle:"amap://styles/fresh"});
+    selectDay(0);
+  };
+  s.onerror=()=>{
+    document.getElementById("map").innerHTML=
+      '<div style="padding:40px;text-align:center;color:#888">地图加载失败，请检查网络或高德 Key。下方卡片与「高德App」按钮仍可正常使用。</div>';
+    selectDay(0);
+  };
+  document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
